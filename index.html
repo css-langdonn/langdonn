@@ -4,220 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>langdonn</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg: #000000;
-            --text: #ffffff;
-            --accent: #ff3e00;
-            --muted: #444444;
-            --font-main: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --bg-color: #f5f5f7; 
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #1d1d1f;
+            --text-sub: #86868b;
+            --accent: #0071e3;
+            --blur: 20px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: crosshair;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; }
+        
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--font-main);
-            overflow: hidden;
-            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 40px;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 60px 20px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- BACKGROUND GRADIENT (SUBTLE) --- */
-        .glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(255, 62, 0, 0.05) 0%, rgba(0,0,0,0) 70%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* --- HEADER --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            z-index: 10;
-        }
-
-        .logo {
-            font-weight: 900;
-            font-size: 1.2rem;
-            letter-spacing: -1px;
-            text-transform: lowercase;
-        }
-
-        .status {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* --- MAIN CONTENT --- */
-        main {
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: clamp(3rem, 15vw, 12rem);
-            font-weight: 900;
-            line-height: 0.8;
-            letter-spacing: -0.05em;
-            text-transform: lowercase;
-            margin-left: -0.05em;
-        }
-
-        .desc {
-            margin-top: 2rem;
+        #container {
+            width: 100%;
             max-width: 400px;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: #888;
+            text-align: center;
         }
 
-        /* --- NAVIGATION --- */
-        nav {
-            display: flex;
-            gap: 40px;
-            z-index: 10;
+        /* Profile Section */
+        .profile {
+            margin-bottom: 32px;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .nav-link {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            text-decoration: none;
-            color: var(--muted);
-            transition: color 0.3s;
-            text-transform: uppercase;
-        }
-
-        .nav-link:hover {
-            color: var(--text);
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            z-index: 10;
-        }
-
-        .release-date {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .release-date span {
-            color: var(--text);
-            font-weight: bold;
-        }
-
-        /* --- INTERACTIVE ELEMENT --- */
-        #audio-trigger {
-            width: 50px;
-            height: 50px;
-            border: 1px solid var(--muted);
+        .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 22%; /* Apple Squircle */
+            background: white;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            font-size: 2.2rem;
+            font-weight: 600;
         }
 
-        #audio-trigger:hover {
-            border-color: var(--accent);
-            background: var(--accent);
+        h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
+        p { color: var(--text-sub); font-size: 15px; margin-top: 4px; }
+
+        /* Links List */
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            body { padding: 20px; }
-            h1 { font-size: 5rem; }
-            nav { flex-direction: column; gap: 10px; }
-            footer { flex-direction: column; align-items: flex-start; gap: 20px; }
+        .link-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--blur));
+            -webkit-backdrop-filter: blur(var(--blur));
+            padding: 16px 20px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.3);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .link-card:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .link-card:active {
+            transform: scale(0.97);
+        }
+
+        .icon-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --card-bg: rgba(28, 28, 30, 0.7);
+                --text-main: #ffffff;
+                --text-sub: #8e8e93;
+            }
+            .link-card { border: 1px solid rgba(255,255,255,0.1); }
+            .avatar { background: #1c1c1e; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glow"></div>
-
-    <header>
-        <div class="logo">langdonn</div>
-        <div class="status" id="clock">00:00:00</div>
-    </header>
-
-    <main>
-        <h1>clock is ticking.</h1>
-        <p class="desc">
-            new music soon <br>
-            #bringbacksmallartists
-        </p>
-    </main>
-
-    <footer>
-        <nav>
-            <a href="#" class="nav-link"></a>
-            <a href="#" class="nav-link"></a>
-            <a href="#" class="nav-link"></a>
-        </nav>
-
-        <div style="text-align: right;">
-            <div class="release-date">NEXT_TRANSMISSION: <span>04.16.26</span></div>
-            <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                <div id="audio-trigger" onclick="togglePulse()">
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 5V10H5L9 14V1H5L2 5Z" fill="currentColor"/>
-                    </svg>
-                </div>
-            </div>
+    <div id="container">
+        <div class="profile" id="profile-section">
+            <div class="avatar">111</div>
+            <h1>langdonn</h1>
+            <p>keep to yourself</p>
         </div>
-    </footer>
+
+        <div class="links-list" id="links-list">
+            </div>
+    </div>
 
     <script>
-        // Minimalist Clock
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        // CONFIGURATION: Edit your usernames/links here
+        const CONFIG = {
+            links: [
+                { title: "Spotify", url: "https://open.spotify.com/artist/6XDIJsiLJg8UOST8TEqVqr?si=4GVHXFJpR2CvtctgdgAYvA", icon: "music" },
+                { title: "Instagram", url: "https://www.instagram.com/_langdonn?igsh=MW1iYjliazczdDA1bw%3D%3D&utm_source=qr", icon: "instagram" },
+            ]
+        };
 
-        // Subtle UI interaction
-        let pulsing = false;
-        function togglePulse() {
-            pulsing = !pulsing;
-            const glow = document.querySelector('.glow');
-            if (pulsing) {
-                glow.style.background = 'radial-gradient(circle, rgba(255, 62, 0, 0.15) 0%, rgba(0,0,0,0) 70%)';
-                document.getElementById('audio-trigger').style.background = 'var(--accent)';
-            } else {
-                glow.style.background = 'radial-gradient(circle, rgba(255, 62, 0, 0.05) 0%, rgba(0,0,0,0) 70%)';
-                document.getElementById('audio-trigger').style.background = 'transparent';
-            }
-        }
+        const linksContainer = document.getElementById('links-list');
 
-        // Easter Egg: Console logging secret
-        console.log("%c[LANGDONN]: SYSTEM_READY", "color: #ff3e00; font-weight: bold;");
-        console.log("Transmission scheduled: 04.16.2026");
+        CONFIG.links.forEach((link, index) => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.className = 'link-card slide-up';
+            a.style.animationDelay = `${(index + 1) * 0.1}s`;
+            a.innerHTML = `
+                <div class="icon-box">
+                    <i data-lucide="${link.icon}" style="width: 20px; color: var(--accent)"></i>
+                    <span>${link.title}</span>
+                </div>
+                <i data-lucide="chevron-right" style="width: 16px; color: var(--text-sub)"></i>
+            `;
+            linksContainer.appendChild(a);
+        });
+
+        lucide.createIcons();
     </script>
 </body>
 </html>
