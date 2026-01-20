@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>langdonn</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="apple-mobile-web-app-title" content="langdonn">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
             --bg-color: #f5f5f7; 
@@ -15,7 +23,12 @@
             --blur: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; 
+        }
         
         body {
             background-color: var(--bg-color);
@@ -25,6 +38,7 @@
             min-height: 100vh;
             padding: 60px 20px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         #container {
@@ -35,26 +49,49 @@
 
         /* Profile Section */
         .profile {
-            margin-bottom: 32px;
-            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 40px;
+            animation: profileEntry 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .avatar {
-            width: 96px;
-            height: 96px;
-            border-radius: 22%; /* Apple Squircle */
-            background: white;
-            margin: 0 auto 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            width: 90px;
+            height: 90px;
+            border-radius: 22%; /* The official Apple Squircle ratio */
+            background: #fff;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
-            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            overflow: hidden;
         }
 
-        h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
-        p { color: var(--text-sub); font-size: 15px; margin-top: 4px; }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* If no image, uses this text style */
+        .avatar-fallback {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        h1 { 
+            font-size: 26px; 
+            font-weight: 600; 
+            letter-spacing: -0.5px; 
+            color: var(--text-main);
+        }
+
+        .bio { 
+            color: var(--text-sub); 
+            font-size: 16px; 
+            margin-top: 6px; 
+            font-weight: 400;
+        }
 
         /* Links List */
         .links-list {
@@ -67,23 +104,24 @@
             background: var(--card-bg);
             backdrop-filter: blur(var(--blur));
             -webkit-backdrop-filter: blur(var(--blur));
-            padding: 16px 20px;
-            border-radius: 18px;
+            padding: 18px 20px;
+            border-radius: 16px;
             text-decoration: none;
             color: var(--text-main);
             font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.4);
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
         }
 
         .link-card:hover {
-            transform: scale(1.02);
+            transform: scale(1.02) translateY(-2px);
             background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         .link-card:active {
@@ -93,24 +131,29 @@
         .icon-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+        }
+
+        .link-text {
+            font-size: 16px;
+            letter-spacing: -0.2px;
         }
 
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
+        @keyframes profileEntry {
+            from { opacity: 0; transform: scale(0.92); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .slide-up {
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes slideUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Dark Mode */
+        /* Dark Mode Support */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #000000;
@@ -118,50 +161,66 @@
                 --text-main: #ffffff;
                 --text-sub: #8e8e93;
             }
-            .link-card { border: 1px solid rgba(255,255,255,0.1); }
-            .avatar { background: #1c1c1e; }
+            .link-card { 
+                border: 1px solid rgba(255,255,255,0.1); 
+            }
+            .avatar { 
+                background: #1c1c1e; 
+            }
         }
     </style>
 </head>
 <body>
 
     <div id="container">
-        <div class="profile" id="profile-section">
-            <div class="avatar">111</div>
-            <h1>langdonn</h1>
-            <p>keep to yourself</p>
-        </div>
-
-        <div class="links-list" id="links-list">
+        <header class="profile">
+            <div class="avatar">
+                <img src="favicon.png" alt="L" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <span class="avatar-fallback" style="display:none;">l</span>
             </div>
+            <h1>langdonn</h1>
+            <p class="bio">keep to yourself</p>
+        </header>
+
+        <nav class="links-list" id="links-list">
+            </nav>
     </div>
 
     <script>
-        // CONFIGURATION: Edit your usernames/links here
+        /**
+         * EASY CUSTOMIZATION
+         * Just change the URL strings below to update your site.
+         */
         const CONFIG = {
             links: [
-                { title: "Spotify", url: "https://open.spotify.com/artist/6XDIJsiLJg8UOST8TEqVqr?si=4GVHXFJpR2CvtctgdgAYvA", icon: "music" },
-                { title: "Instagram", url: "https://www.instagram.com/_langdonn?igsh=MW1iYjliazczdDA1bw%3D%3D&utm_source=qr", icon: "instagram" },
+                { title: "spotify", url: "YOUR_SPOTIFY_LINK", icon: "music" },
+                { title: "tiktok", url: "YOUR_TIKTOK_LINK", icon: "video" },
+                { title: "instagram", url: "YOUR_INSTAGRAM_LINK", icon: "instagram" },
+                { title: "design portfolio", url: "YOUR_PORTFOLIO_LINK", icon: "palette" }
             ]
         };
 
-        const linksContainer = document.getElementById('links-list');
+        const list = document.getElementById('links-list');
 
         CONFIG.links.forEach((link, index) => {
             const a = document.createElement('a');
             a.href = link.url;
+            a.target = "_blank";
             a.className = 'link-card slide-up';
+            // This creates the staggered "one-by-one" appearance effect
             a.style.animationDelay = `${(index + 1) * 0.1}s`;
+            
             a.innerHTML = `
                 <div class="icon-box">
                     <i data-lucide="${link.icon}" style="width: 20px; color: var(--accent)"></i>
-                    <span>${link.title}</span>
+                    <span class="link-text">${link.title}</span>
                 </div>
-                <i data-lucide="chevron-right" style="width: 16px; color: var(--text-sub)"></i>
+                <i data-lucide="chevron-right" style="width: 16px; color: var(--text-sub); opacity: 0.5;"></i>
             `;
-            linksContainer.appendChild(a);
+            list.appendChild(a);
         });
 
+        // Activation for the icons
         lucide.createIcons();
     </script>
 </body>
