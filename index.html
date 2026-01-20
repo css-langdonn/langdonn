@@ -17,9 +17,10 @@
             --text-main: #1d1d1f;
             --text-sub: #86868b;
             --accent: #0071e3;
+            --blur: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; }
         
         body {
             background-color: var(--bg-color);
@@ -27,7 +28,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding: 60px 20px;
+            padding: 80px 20px;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -39,29 +40,28 @@
 
         /* Profile Section */
         .profile {
-            margin-bottom: 32px;
+            margin-bottom: 40px;
             animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* The Profile Icon on the page (back to original style) */
         .avatar {
-            width: 96px;
-            height: 96px;
-            border-radius: 22%; 
+            width: 90px;
+            height: 90px;
+            border-radius: 22%; /* Apple Squircle */
             background: white;
-            margin: 0 auto 16px;
+            margin: 0 auto 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 500;
             color: var(--text-main);
-            text-transform: lowercase;
+            text-transform: lowercase; /* Forces 'l' to be lowercase */
         }
 
-        h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
-        p { color: var(--text-sub); font-size: 15px; margin-top: 4px; }
+        h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; color: var(--text-main); }
+        p { color: var(--text-sub); font-size: 16px; margin-top: 6px; }
 
         /* Links List */
         .links-list {
@@ -72,9 +72,9 @@
 
         .link-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 16px 20px;
+            backdrop-filter: blur(var(--blur));
+            -webkit-backdrop-filter: blur(var(--blur));
+            padding: 18px 22px;
             border-radius: 18px;
             text-decoration: none;
             color: var(--text-main);
@@ -82,7 +82,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255,255,255,0.3);
             opacity: 0;
             transform: translateY(20px);
@@ -91,6 +91,7 @@
         .link-card:hover {
             transform: scale(1.02);
             background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         }
 
         .link-card:active {
@@ -100,11 +101,12 @@
         .icon-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
+        /* Smooth Entry Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
+            from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -116,6 +118,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Automatic Dark Mode */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #000000;
@@ -131,29 +134,31 @@
 <body>
 
     <div id="container">
-        <div class="profile">
+        <header class="profile">
             <div class="avatar">l</div> <h1>langdonn</h1>
             <p>keep to yourself</p>
-        </div>
+        </header>
 
-        <div class="links-list" id="links-list"></div>
+        <nav class="links-list" id="links-list"></nav>
     </div>
 
     <script>
+        // CONFIGURATION: Add your actual links here
         const CONFIG = {
             links: [
                 { title: "spotify", url: "#", icon: "music" },
                 { title: "tiktok", url: "#", icon: "video" },
                 { title: "instagram", url: "#", icon: "instagram" },
-                { title: "design portfolio", url: "#", icon: "layout" }
+                { title: "design portfolio", url: "#", icon: "palette" }
             ]
         };
 
-        const linksContainer = document.getElementById('links-list');
+        const list = document.getElementById('links-list');
 
         CONFIG.links.forEach((link, index) => {
             const a = document.createElement('a');
             a.href = link.url;
+            a.target = "_blank";
             a.className = 'link-card slide-up';
             a.style.animationDelay = `${(index + 1) * 0.1}s`;
             a.innerHTML = `
@@ -161,9 +166,9 @@
                     <i data-lucide="${link.icon}" style="width: 20px; color: var(--accent)"></i>
                     <span>${link.title}</span>
                 </div>
-                <i data-lucide="chevron-right" style="width: 16px; color: var(--text-sub)"></i>
+                <i data-lucide="chevron-right" style="width: 16px; color: var(--text-sub); opacity: 0.5;"></i>
             `;
-            linksContainer.appendChild(a);
+            list.appendChild(a);
         });
 
         lucide.createIcons();
