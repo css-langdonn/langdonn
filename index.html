@@ -2,51 +2,312 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>langdonn | liquid glass</title>
     <style>
         :root {
-            --bg: #fafafa;
-            --text: #1a1a1a;
+            --bg: #030303;
+            --glass: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00f2ff;
+            --fluid-speed: 0.6s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'inter', sans-serif;
+            text-transform: lowercase;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: #fff;
+            overflow: hidden; 
+            height: 100dvh;
+        }
+
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        @media (pointer: fine) {
+            #cursor { display: block; }
+            body { cursor: none; }
+        }
+
+        .liquid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+        }
+
+        .orb {
+            position: absolute;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .view {
+            position: absolute;
+            inset: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            cursor: default;
-        }
-
-        main {
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1) translateY(20px);
+            transition: all var(--fluid-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
-            animation: fadeIn 2s ease-in;
         }
 
-        p {
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            opacity: 0.6;
-            transition: opacity 0.5s ease;
-        }
-
-        p:hover {
+        .view.active {
             opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; filter: blur(5px); }
-            to { opacity: 1; filter: blur(0); }
+        nav {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 100px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            border-radius: 100px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        h1 {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -8px;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            background: #fff;
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 100px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255,255,255,0.3);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* mobile grid adjustment */
+        @media (max-width: 600px) {
+            .card-grid { grid-template-columns: 1fr; }
+            h1 { letter-spacing: -4px; }
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 30px;
+            text-align: left;
+        }
+
+        input {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 20px;
+            color: #fff;
+            width: 100%;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 16px; /* crucial for ios zoom fix */
         }
     </style>
 </head>
 <body>
-    <main>
-        <p>less is enough.</p>
-    </main>
+
+    <div id="cursor"></div>
+
+    <div class="liquid-bg">
+        <div class="orb" id="orb1" style="background: #00f2ff; top: -20%; left: -10%;"></div>
+        <div class="orb" id="orb2" style="background: #7000ff; bottom: -20%; right: -10%;"></div>
+    </div>
+
+    <nav>
+        <div class="nav-glass">
+            <a href="#" class="nav-item active" onclick="showView('home', this)">home</a>
+            <a href="#" class="nav-item" onclick="showView('work', this)">work</a>
+            <a href="#" class="nav-item" onclick="showView('contact', this)">upgrade</a>
+        </div>
+    </nav>
+
+    <section id="home" class="view active">
+        <h1>langdonn</h1>
+        <p style="margin-bottom: 40px; opacity: 0.6;">if they can’t find you on a screen, you don’t exist.</p>
+        <button class="btn" onclick="showView('contact')">start the transformation</button>
+    </section>
+
+    <section id="work" class="view">
+        <div class="card-grid">
+            <div class="glass-card">
+                <h3>for restraunts:</h3>
+                <p>we translate physical atmosphere into digital presence. your restaurant deserves an interface as refined as its menu.</p>
+            </div>
+            <div class="glass-card">
+                <h3>for others:</h3>
+                <p>boutique retail, local trades, or specialized services. if you have a craft, we give it a premium and professional look.</p>
+            </div>
+            <div class="glass-card" style="grid-column: 1 / -1;">
+                <h3>the results.</h3>
+                <p>our clients see a 400% increase in "how did you do that?" emails.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="view">
+        <div class="glass-card" style="width: 100%; max-width: 450px;">
+            <h2 style="margin-bottom: 20px;">get your website.</h2>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="your name" required>
+                <input type="email" id="email" placeholder="email address" required>
+                <input type="text" id="url" placeholder="current (boring) url">
+                <button type="submit" class="btn" style="width: 100%;" id="submitBtn">send to langdonn</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwWo25dFYDepNbP4OX6_12xFg2fAO1j36dNQYbht1KAXJssCfUaH5cvCS6iIZdhE_yCbA/exec';
+        
+        function showView(viewId, navEl) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(navEl) {
+                navEl.classList.add('active');
+            } else {
+                document.querySelectorAll('.nav-item').forEach(el => {
+                    if(el.innerText === 'upgrade' && viewId === 'contact') el.classList.add('active');
+                    if(el.innerText === viewId) el.classList.add('active');
+                });
+            }
+
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            const orb1 = document.getElementById('orb1');
+            if(viewId === 'work') {
+                orb1.style.transform = 'translate(30vw, 20vh)';
+            } else if (viewId === 'contact') {
+                orb1.style.background = '#ff007a';
+                orb1.style.transform = 'translate(10vw, 30vh)';
+            } else {
+                orb1.style.background = '#00f2ff';
+                orb1.style.transform = 'translate(0,0)';
+            }
+        }
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            const xMove = (e.clientX - window.innerWidth / 2) / 30;
+            const yMove = (e.clientY - window.innerHeight / 2) / 30;
+            document.querySelectorAll('.view.active h1, .glass-card').forEach(el => {
+                el.style.transform = `translate(${xMove}px, ${yMove}px)`;
+            });
+        });
+
+        const form = document.getElementById('contactForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.innerHTML = 'processing...';
+            btn.disabled = true;
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                url: document.getElementById('url').value
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                btn.innerHTML = 'sent successfully';
+                form.reset();
+                setTimeout(() => {
+                    showView('home');
+                    btn.innerHTML = 'send to langdonn';
+                    btn.disabled = false;
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
