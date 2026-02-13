@@ -16,15 +16,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'inter', sans-serif; text-transform: lowercase; }
         body { background: var(--bg); color: #fff; overflow: hidden; height: 100dvh; }
 
+        /* FIX: Highest Z-Index for Cursor */
+        #cursor { 
+            width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5); 
+            backdrop-filter: blur(5px); border-radius: 50%; position: fixed; 
+            pointer-events: none; z-index: 99999; display: none;
+            transition: transform 0.15s ease-out;
+        }
+
         #lockdownScreen { 
             display: none; position: fixed; inset: 0; background: #000; z-index: 10000; 
             flex-direction: column; align-items: center; justify-content: center; text-align: center; 
         }
 
-        #particleCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 6; }
+        #particleCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
-        #cursor { width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; display: none; }
-        @media (pointer: fine) { #cursor { display: block; } body { cursor: none; } }
+        @media (pointer: fine) { body { cursor: none; } }
 
         .liquid-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%); }
         .orb { position: absolute; width: 80vw; height: 80vw; border-radius: 50%; filter: blur(120px); opacity: 0.3; transition: all 1s ease; }
@@ -42,14 +49,14 @@
         .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 25px; border-radius: 30px; text-align: left; }
         input { background: var(--glass); border: 1px solid var(--border); padding: 18px; border-radius: 20px; color: #fff; width: 100%; margin-bottom: 15px; outline: none; }
 
-        #loginModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(40px); z-index: 5000; align-items: center; justify-content: center; }
+        #loginModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(40px); z-index: 10001; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
+    <div id="cursor"></div>
     <div id="lockdownScreen"><h1>locked.</h1><p style="opacity: 0.5;">liquid maintenance in progress.</p></div>
     <canvas id="particleCanvas"></canvas>
-    <div id="cursor"></div>
 
     <div class="liquid-bg">
         <div class="orb" id="orb1" style="background: #00f2ff; top: -20%; left: -10%;"></div>
@@ -129,6 +136,19 @@
         const settingsRef = ref(db, 'settings');
         let CURRENT_WEBHOOK = "";
 
+        // CURSOR LOGIC
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.display = 'block';
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            const xMove = (e.clientX - window.innerWidth / 2) / 45;
+            const yMove = (e.clientY - window.innerHeight / 2) / 45;
+            document.querySelectorAll('.view.active h1, .glass-card').forEach(el => {
+                el.style.transform = `translate(${xMove}px, ${yMove}px)`;
+            });
+        });
+
         // PARTICLE SYSTEM
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
@@ -197,7 +217,7 @@
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.innerHTML = 'sending...';
-            const payload = { content: `**new lead**\nName: ${document.getElementById('name').value}\nEmail: ${document.getElementById('email').value}` };
+            const payload = { content: `**new lead**\nName: ${document.getElementById('name').value}\nEmail: ${document.getElementById('email').value}\nSite: ${document.getElementById('url').value || 'N/A'}` };
             await fetch(CURRENT_WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
             btn.innerHTML = 'sent';
             setTimeout(() => { showView('home'); btn.innerHTML = 'send to langdonn'; }, 2000);
