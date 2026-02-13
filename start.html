@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>langdonn | initiate</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg: #000; --accent: #00f2ff; --glass: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; text-transform: lowercase; }
+        body { background: var(--bg); color: #fff; overflow-x: hidden; line-height: 1.5; }
+
+        /* Smooth Scroll & Progress */
+        html { scroll-behavior: smooth; }
+        .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 10000; width: 0%; transition: width 0.1s ease-out; }
+
+        /* Apple-Style Navigation */
+        nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 9999; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+        .nav-content { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; padding: 0 20px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.5px; }
+        .nav-content a { color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; }
+        .nav-content a:hover { color: #fff; }
+
+        /* Hero Section with Scale Effect */
+        section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; perspective: 1000px; }
+        .reveal { opacity: 0; transform: translateY(30px) scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        h1 { font-size: clamp(3.5rem, 15vw, 10rem); font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; text-align: center; }
+        .gradient-text { background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* The "Bento" Grid for Features */
+        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 900px; margin-top: 50px; }
+        .bento-card { background: var(--glass); border: 1px solid var(--border); border-radius: 28px; padding: 30px; transition: 0.5s; cursor: default; }
+        .bento-card:hover { border-color: var(--accent); background: rgba(0, 242, 255, 0.02); }
+        .bento-card i { color: var(--accent); margin-bottom: 15px; }
+
+        /* Interactive Configurator */
+        .configurator { background: #0a0a0a; border: 1px solid var(--border); border-radius: 40px; padding: 50px; width: 100%; max-width: 600px; text-align: center; position: sticky; top: 100px; }
+        .toggle-pill { display: inline-flex; background: #1a1a1a; padding: 5px; border-radius: 100px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .pill-btn { padding: 10px 25px; border-radius: 100px; border: none; background: transparent; color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .pill-btn.active { background: #fff; color: #000; }
+
+        .price-hero { font-size: 6rem; font-weight: 700; letter-spacing: -5px; margin: 20px 0; transition: 0.3s; }
+        .price-hero span { font-size: 1.5rem; letter-spacing: 0; opacity: 0.4; }
+
+        /* Call to Action */
+        .cta-btn { background: #fff; color: #000; padding: 22px 50px; border-radius: 100px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; }
+        .cta-btn:hover { transform: scale(1.02); background: var(--accent); }
+
+        /* Floating Decoration */
+        .orb { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,242,255,0.15) 0%, transparent 70%); z-index: -1; pointer-events: none; filter: blur(60px); }
+    </style>
+</head>
+<body>
+
+    <div class="scroll-progress" id="progress"></div>
+    <div class="orb" id="cursor-orb"></div>
+
+    <nav>
+        <div class="nav-content">
+            <span style="font-weight: 800; letter-spacing: -1px;">langdonn.</span>
+            <div style="display: flex; gap: 30px;">
+                <a href="#features">specs</a>
+                <a href="#build">configure</a>
+                <a href="#build" style="color: var(--accent);">initiate →</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero">
+        <h1 class="reveal gradient-text">digital<br>presence.</h1>
+        <p class="reveal" style="margin-top: 30px; opacity: 0.5; font-size: 1.2rem;">engineered for the local elite.</p>
+    </section>
+
+    <section id="features">
+        <h2 class="reveal" style="font-size: 3rem; margin-bottom: 20px;">everything you need.</h2>
+        <div class="bento-grid">
+            <div class="bento-card reveal">
+                <i data-lucide="zap"></i>
+                <h3>ai-accelerated</h3>
+                <p style="opacity: 0.5; font-size: 0.9rem;">for all of the features, you can't even imagine</p>
+            </div>
+            <div class="bento-card reveal">
+                <i data-lucide="shield-check"></i>
+                <h3>industrial hosting</h3>
+                <p style="opacity: 0.5; font-size: 0.9rem;">github infrastructure meets godaddy reliability.</p>
+            </div>
+            <div class="bento-card reveal" style="grid-column: span 2;">
+                <i data-lucide="refresh-cw"></i>
+                <h3>the evolution pack</h3>
+                <p style="opacity: 0.5; font-size: 0.9rem;">unlimited monthly revisions. your site grows as you do.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="build">
+        <div class="configurator reveal">
+            <span style="font-size: 0.7rem; letter-spacing: 2px; font-weight: 800; opacity: 0.4;">configuration</span>
+            
+            <div class="price-hero" id="price-tag">$150<span>.00</span></div>
+            <p id="price-desc" style="opacity: 0.5; margin-bottom: 30px;">initial deposit to start build</p>
+
+            <div class="toggle-pill">
+                <button class="pill-btn active" onclick="updatePrice(150, 'initial deposit', this)">deposit</button>
+                <button class="pill-btn" onclick="updatePrice(300, 'full buyout', this)">full project</button>
+            </div>
+
+            <div style="text-align: left; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--border);">
+                    <span style="opacity: 0.6;">evolution pack (hosting + edits)</span>
+                    <span style="color: var(--accent);">$50/mo</span>
+                </div>
+            </div>
+
+            <button class="cta-btn" onclick="initiateLaunch()">pay @ stripe.com</button>
+            <p style="font-size: 0.65rem; margin-top: 20px; opacity: 0.3;">secure checkout via stripe encrypted portal</p>
+        </div>
+    </section>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Reveal Animation on Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Scroll Progress & Cursor Orb
+        const orb = document.getElementById('cursor-orb');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress").style.width = scrolled + "%";
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            orb.style.left = e.clientX - 200 + 'px';
+            orb.style.top = e.clientY - 200 + 'px';
+        });
+
+        // Pricing Engine
+        function updatePrice(val, desc, btn) {
+            document.getElementById('price-tag').innerHTML = `$${val}<span>.00</span>`;
+            document.getElementById('price-desc').innerText = desc;
+            
+            document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Haptic-style feedback
+            document.getElementById('price-tag').style.transform = 'scale(1.1)';
+            setTimeout(() => { document.getElementById('price-tag').style.transform = 'scale(1)'; }, 100);
+        }
+
+        function initiateLaunch() {
+            const btn = document.querySelector('.cta-btn');
+            btn.innerText = "connecting to stripe...";
+            btn.style.background = "#00f2ff";
+            setTimeout(() => {
+                window.location.href = "https://buy.stripe.com/your-link";
+            }, 800);
+        }
+    </script>
+</body>
+</html>
