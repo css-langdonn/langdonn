@@ -20,7 +20,7 @@
         .nav-content a { color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; }
         .nav-content a:hover { color: #fff; }
 
-        /* Hero Section with Scale Effect */
+        /* Hero Section */
         section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; perspective: 1000px; }
         .reveal { opacity: 0; transform: translateY(30px) scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
@@ -28,13 +28,13 @@
         h1 { font-size: clamp(3.5rem, 15vw, 10rem); font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; text-align: center; }
         .gradient-text { background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* The "Bento" Grid for Features */
+        /* Bento Grid */
         .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 900px; margin-top: 50px; }
         .bento-card { background: var(--glass); border: 1px solid var(--border); border-radius: 28px; padding: 30px; transition: 0.5s; cursor: default; }
         .bento-card:hover { border-color: var(--accent); background: rgba(0, 242, 255, 0.02); }
         .bento-card i { color: var(--accent); margin-bottom: 15px; }
 
-        /* Interactive Configurator */
+        /* Configurator */
         .configurator { background: #0a0a0a; border: 1px solid var(--border); border-radius: 40px; padding: 50px; width: 100%; max-width: 600px; text-align: center; position: sticky; top: 100px; }
         .toggle-pill { display: inline-flex; background: #1a1a1a; padding: 5px; border-radius: 100px; margin-bottom: 30px; border: 1px solid var(--border); }
         .pill-btn { padding: 10px 25px; border-radius: 100px; border: none; background: transparent; color: #fff; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
@@ -43,11 +43,17 @@
         .price-hero { font-size: 6rem; font-weight: 700; letter-spacing: -5px; margin: 20px 0; transition: 0.3s; }
         .price-hero span { font-size: 1.5rem; letter-spacing: 0; opacity: 0.4; }
 
-        /* Call to Action */
+        /* CTA */
         .cta-btn { background: #fff; color: #000; padding: 22px 50px; border-radius: 100px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; }
         .cta-btn:hover { transform: scale(1.02); background: var(--accent); }
 
-        /* Floating Decoration */
+        /* Lead Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); z-index: 20000; display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.4s; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: #0a0a0a; border: 1px solid var(--border); border-radius: 35px; padding: 40px; width: 95%; max-width: 450px; text-align: center; }
+        .modal-content input { width: 100%; background: #111; border: 1px solid var(--border); padding: 18px 20px; border-radius: 18px; color: #fff; margin-bottom: 15px; outline: none; font-size: 0.9rem; }
+        .modal-content input:focus { border-color: var(--accent); }
+
         .orb { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,242,255,0.15) 0%, transparent 70%); z-index: -1; pointer-events: none; filter: blur(60px); }
     </style>
 </head>
@@ -55,6 +61,20 @@
 
     <div class="scroll-progress" id="progress"></div>
     <div class="orb" id="cursor-orb"></div>
+
+    <div class="modal-overlay" id="lead-modal">
+        <div class="modal-content">
+            <h3 style="font-size: 1.5rem; margin-bottom: 5px;">initiate inquiry</h3>
+            <p style="color: var(--accent); font-weight: 800; margin-bottom: 10px;">initial deposit ($150.00)</p>
+            <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 30px;">to begin the project build</p>
+            
+            <input type="text" id="cust-name" placeholder="full name">
+            <input type="email" id="cust-email" placeholder="email address">
+            <input type="tel" id="cust-phone" placeholder="phone number">
+            <button class="cta-btn" id="submit-btn" onclick="sendToDiscord()">submit inquiry</button>
+            <p id="status-msg" style="font-size: 0.7rem; margin-top: 20px; opacity: 0.4; cursor: pointer;" onclick="closeModal()">cancel</p>
+        </div>
+    </div>
 
     <nav>
         <div class="nav-content">
@@ -101,69 +121,107 @@
             <p id="price-desc" style="opacity: 0.5; margin-bottom: 30px;">initial deposit to start build</p>
 
             <div class="toggle-pill">
-                <button class="pill-btn active" onclick="updatePrice(150, 'initial deposit', this)">deposit</button>
-                <button class="pill-btn" onclick="updatePrice(300, 'full buyout', this)">full project</button>
+                <button class="pill-btn active" onclick="updatePrice(150, 'initial deposit to start build', this)">deposit</button>
+                <button class="pill-btn" onclick="updatePrice(300, 'full project buyout (after deposit)', this)">full project</button>
             </div>
 
             <div style="text-align: left; margin-bottom: 30px;">
                 <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--border);">
                     <span style="opacity: 0.6;">evolution pack (hosting + edits)</span>
-                    <span style="color: var(--accent);">$50/mo</span>
+                    <span style="color: var(--accent);">$50 (one time)</span>
                 </div>
             </div>
 
-            <button class="cta-btn" onclick="initiateLaunch()">pay @ stripe.com</button>
-            <p style="font-size: 0.65rem; margin-top: 20px; opacity: 0.3;">secure checkout via stripe encrypted portal</p>
+            <button class="cta-btn" onclick="openModal()">inquire</button>
+            <p style="font-size: 0.65rem; margin-top: 20px; opacity: 0.3;">next step: $150 secure deposit</p>
         </div>
     </section>
 
     <script>
-        // Lucide Icons
         lucide.createIcons();
 
-        // Reveal Animation on Scroll
+        // Reveal Logic
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Scroll Progress & Cursor Orb
+        // Cursor & Progress
         const orb = document.getElementById('cursor-orb');
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("progress").style.width = scrolled + "%";
+            document.getElementById("progress").style.width = (winScroll / height) * 100 + "%";
         });
-
         document.addEventListener('mousemove', (e) => {
             orb.style.left = e.clientX - 200 + 'px';
             orb.style.top = e.clientY - 200 + 'px';
         });
 
-        // Pricing Engine
+        // Price Engine
         function updatePrice(val, desc, btn) {
             document.getElementById('price-tag').innerHTML = `$${val}<span>.00</span>`;
             document.getElementById('price-desc').innerText = desc;
-            
             document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // Haptic-style feedback
-            document.getElementById('price-tag').style.transform = 'scale(1.1)';
-            setTimeout(() => { document.getElementById('price-tag').style.transform = 'scale(1)'; }, 100);
         }
 
-        function initiateLaunch() {
-            const btn = document.querySelector('.cta-btn');
-            btn.innerText = "connecting to stripe...";
-            btn.style.background = "#00f2ff";
-            setTimeout(() => {
-                window.location.href = "https://buy.stripe.com/your-link";
-            }, 800);
+        // Modal Logic - Forced to Deposit Workflow
+        function openModal() {
+            document.getElementById('lead-modal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('lead-modal').classList.remove('active');
+        }
+
+        // DISCORD WEBHOOK LOGIC
+        function sendToDiscord() {
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            const phone = document.getElementById('cust-phone').value;
+            const btn = document.getElementById('submit-btn');
+
+            if(!name || !email || !phone) {
+                alert("please complete all fields.");
+                return;
+            }
+
+            btn.innerText = "transmitting...";
+            btn.disabled = true;
+
+            const webhookURL = "https://discord.com/api/webhooks/1471883528043233485/mu076AkvBeEaTv8PHff1xKMt0hAttbfeOD3O0QkOInLjEZOPQFiq1u0xgVXsjGLha320";
+            
+            const payload = {
+                embeds: [{
+                    title: "🔔 new potential sale: deposit",
+                    color: 62463,
+                    fields: [
+                        { name: "Intent", value: "Standard $150 Deposit Inquiry", inline: false },
+                        { name: "Customer", value: name, inline: false },
+                        { name: "Email", value: email, inline: true },
+                        { name: "Phone", value: phone, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                document.getElementById('status-msg').innerText = "transmission successful.";
+                setTimeout(() => {
+                    closeModal();
+                    btn.innerText = "submit inquiry";
+                    btn.disabled = false;
+                }, 2000);
+            })
+            .catch(() => {
+                alert("error connecting to terminal.");
+                btn.disabled = false;
+            });
         }
     </script>
 </body>
