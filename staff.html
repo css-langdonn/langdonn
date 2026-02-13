@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>langdonn | global console</title>
+    <title>langdonn | command</title>
     <style>
         :root { --bg: #030303; --accent: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
         body { background: var(--bg); color: #fff; font-family: 'inter', sans-serif; padding: 40px; text-transform: lowercase; display: flex; justify-content: center; }
@@ -16,29 +16,27 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="font-size: 3rem; letter-spacing: -3px; margin-bottom: 30px;">command.</h1>
-        
+        <h1>command console.</h1>
         <div class="panel">
-            <div class="label">system security</div>
+            <div class="label">lockdown</div>
             <p>status: <span id="status">syncing...</span></p>
-            <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">activate lockdown</button>
-            <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">disable lockdown</button>
+            <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">lock site</button>
+            <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">unlock site</button>
         </div>
-
         <div class="panel">
-            <div class="label">atmosphere toggle</div>
+            <div class="label">theme engine</div>
             <select id="themeSelect">
-                <option value="none">liquid only</option>
-                <option value="snow">winter (snow)</option>
-                <option value="leaves">autumn (leaves)</option>
+                <option value="none">default</option>
+                <option value="snow">winter snow</option>
+                <option value="leaves">autumn leaves</option>
+                <option value="matrix">matrix rain</option>
             </select>
-            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy theme</button>
+            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy</button>
         </div>
-
         <div class="panel">
-            <div class="label">integrations</div>
-            <input type="text" id="webhookInput" placeholder="discord webhook url">
-            <button class="btn" style="background: #fff;" onclick="setWebhook()">update webhook</button>
+            <div class="label">discord webhook</div>
+            <input type="text" id="webhookInput" placeholder="webhook url">
+            <button class="btn" style="background: #fff;" onclick="setWebhook()">update</button>
         </div>
     </div>
 
@@ -51,10 +49,7 @@
             authDomain: "langdonn-core.firebaseapp.com",
             databaseURL: "https://langdonn-core-default-rtdb.firebaseio.com",
             projectId: "langdonn-core",
-            storageBucket: "langdonn-core.firebasestorage.app",
-            messagingSenderId: "868628296074",
-            appId: "1:868628296074:web:be020a54a488952962d873",
-            measurementId: "G-LS03K0J70S"
+            appId: "1:868628296074:web:be020a54a488952962d873"
         };
 
         const app = initializeApp(firebaseConfig);
