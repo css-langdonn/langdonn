@@ -2,28 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>langdonn | command</title>
     <style>
         :root { --bg: #030303; --accent: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
         body { background: var(--bg); color: #fff; font-family: 'inter', sans-serif; padding: 40px; text-transform: lowercase; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; }
+        .container { width: 100%; max-width: 600px; }
         .panel { background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
         .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        input, select { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: #fff; margin-top: 10px; border-radius: 10px; outline: none; }
-        .label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; margin-bottom: 10px; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        input, select, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: #fff; margin-top: 10px; border-radius: 10px; outline: none; font-family: inherit; }
+        textarea { height: 120px; resize: none; font-size: 0.9rem; }
+        .label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; margin-bottom: 5px; margin-top: 15px; font-weight: 700; }
         #status { font-weight: 900; color: var(--accent); }
+        
+        /* Toolbar for Webhook */
+        .toolbar { display: flex; gap: 8px; margin-top: 10px; }
+        .tool-btn { background: #111; border: 1px solid #333; color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; }
+        .tool-btn:hover { background: #222; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>command console.</h1>
+        <h1 style="font-size: 3rem; letter-spacing: -3px; margin-bottom: 30px;">command console.</h1>
+        
         <div class="panel">
-            <div class="label">lockdown</div>
+            <div class="label">global state</div>
             <p>status: <span id="status">syncing...</span></p>
-            <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">lock site</button>
-            <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">unlock site</button>
-        </div>
-        <div class="panel">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">lock site</button>
+                <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">unlock site</button>
+            </div>
+            
             <div class="label">theme engine</div>
             <select id="themeSelect">
                 <option value="none">default</option>
@@ -31,23 +41,45 @@
                 <option value="leaves">autumn leaves</option>
                 <option value="matrix">matrix rain</option>
             </select>
-            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy</button>
+            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy theme</button>
         </div>
+
         <div class="panel">
-            <div class="label">discord webhook</div>
-            <input type="text" id="webhookInput" placeholder="webhook url">
-            <button class="btn" style="background: #fff;" onclick="setWebhook()">update</button>
+            <div class="label">discord broadcaster</div>
+            <p style="font-size: 0.75rem; opacity: 0.5;">send rich-text messages to your connected channel.</p>
+            
+            <div class="toolbar">
+                <button class="tool-btn" onclick="wrapText('**')"><b>B</b></button>
+                <button class="tool-btn" onclick="wrapText('*')"><i>I</i></button>
+                <button class="tool-btn" onclick="wrapText('```')">code</button>
+                <button class="tool-btn" onclick="wrapText('> ')">quote</button>
+            </div>
+            
+            <textarea id="msgContent" placeholder="type your message here..."></textarea>
+            
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <input type="checkbox" id="isAlert" style="width: 20px; margin: 0;">
+                <span style="font-size: 0.8rem; opacity: 0.7;">send as system alert (formatting)</span>
+            </div>
+            
+            <button class="btn" style="background: var(--accent); color: #000;" onclick="sendBroadcast()">send broadcast</button>
+        </div>
+
+        <div class="panel">
+            <div class="label">endpoint configuration</div>
+            <input type="text" id="webhookInput" placeholder="discord webhook url">
+            <button class="btn" style="background: #fff; font-size: 0.8rem; padding: 10px;" onclick="setWebhook()">save webhook</button>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js](https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js)";
+        import { getDatabase, ref, update, onValue } from "[https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js](https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js)";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB7YULiFTnzyp6rYVNUBgGOleqyxUAWyrc",
             authDomain: "langdonn-core.firebaseapp.com",
-            databaseURL: "https://langdonn-core-default-rtdb.firebaseio.com",
+            databaseURL: "[https://langdonn-core-default-rtdb.firebaseio.com](https://langdonn-core-default-rtdb.firebaseio.com)",
             projectId: "langdonn-core",
             appId: "1:868628296074:web:be020a54a488952962d873"
         };
@@ -55,6 +87,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const settingsRef = ref(db, 'settings');
+        let currentHook = "";
 
         onValue(settingsRef, (s) => {
             const d = s.val();
@@ -62,13 +95,55 @@
                 document.getElementById('status').innerText = d.lockdown ? "LOCKED" : "LIVE";
                 document.getElementById('status').style.color = d.lockdown ? "#ff4d4d" : "#00f2ff";
                 document.getElementById('webhookInput').value = d.webhook || "";
+                currentHook = d.webhook || "";
                 document.getElementById('themeSelect').value = d.theme || "none";
             }
         });
 
+        // SYSTEM ACTIONS
         window.setLock = (v) => update(settingsRef, { lockdown: v });
         window.setTheme = () => update(settingsRef, { theme: document.getElementById('themeSelect').value });
         window.setWebhook = () => update(settingsRef, { webhook: document.getElementById('webhookInput').value });
+
+        // BROADCASTER ACTIONS
+        window.wrapText = (symbol) => {
+            const area = document.getElementById('msgContent');
+            const start = area.selectionStart;
+            const end = area.selectionEnd;
+            const text = area.value;
+            const selected = text.substring(start, end);
+            area.value = text.substring(0, start) + symbol + selected + symbol + text.substring(end);
+            area.focus();
+        };
+
+        window.sendBroadcast = async () => {
+            if(!currentHook) return alert("no webhook configured");
+            const content = document.getElementById('msgContent').value;
+            const isAlert = document.getElementById('isAlert').checked;
+            
+            let finalMsg = content;
+            if(isAlert) {
+                finalMsg = "```diff\n+ SYSTEM BROADCAST\n```\n" + content;
+            }
+
+            const payload = {
+                username: "langdonn terminal",
+                avatar_url: "[https://i.imgur.com/4E4X6qS.png](https://i.imgur.com/4E4X6qS.png)",
+                content: finalMsg
+            };
+
+            try {
+                await fetch(currentHook, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                document.getElementById('msgContent').value = "";
+                alert("broadcast sent");
+            } catch (e) {
+                alert("broadcast failed: " + e);
+            }
+        };
     </script>
 </body>
 </html>
