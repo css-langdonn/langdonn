@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>langdonn | command console</title>
+    <style>
+        :root {
+            --bg: #030303;
+            --accent: #00f2ff;
+            --danger: #ff4d4d;
+            --glass: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; text-transform: lowercase; font-family: 'inter', sans-serif; }
+        body { background: var(--bg); color: #fff; padding: 40px; display: flex; justify-content: center; min-height: 100vh; }
+        
+        .container { width: 100%; max-width: 600px; }
+        h1 { font-weight: 900; letter-spacing: -4px; font-size: 3rem; margin-bottom: 40px; text-align: center; }
+        
+        .panel { 
+            background: var(--glass); 
+            border: 1px solid var(--border); 
+            padding: 30px; 
+            border-radius: 24px; 
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+        
+        .label { font-size: 0.7rem; opacity: 0.4; margin-bottom: 15px; letter-spacing: 1px; font-weight: 700; }
+        
+        .btn { 
+            background: #fff; color: #000; border: none; padding: 18px; 
+            border-radius: 100px; font-weight: 700; cursor: pointer; 
+            transition: 0.3s; width: 100%; margin-top: 10px; font-size: 1rem;
+        }
+        .btn:hover { transform: scale(1.02); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        
+        input { 
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); 
+            padding: 15px; border-radius: 12px; color: #fff; outline: none; 
+            margin-bottom: 10px; font-size: 0.9rem;
+        }
+        
+        .status-box {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 20px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.02);
+        }
+        #lockStatus { font-weight: 900; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>command.</h1>
+    
+    <div class="panel">
+        <div class="label">global system security</div>
+        <div class="status-box">
+            <span>current status:</span>
+            <span id="lockStatus">loading...</span>
+        </div>
+        <button class="btn btn-danger" id="lockOn">activate lockdown</button>
+        <button class="btn" style="background: transparent; color: #fff; border: 1px solid var(--border);" id="lockOff">disable lockdown</button>
+    </div>
+
+    <div class="panel">
+        <div class="label">discord integrations</div>
+        <h3>webhook endpoint</h3>
+        <p style="font-size: 0.8rem; opacity: 0.4; margin-bottom: 15px;">this changes where contact forms are sent.</p>
+        <input type="text" id="webhookInput" placeholder="https://discord.com/api/webhooks/...">
+        <button class="btn" id="saveWebhook">update webhook</button>
+    </div>
+
+    <p style="text-align: center; opacity: 0.2; font-size: 0.7rem; margin-top: 20px;">langdonn liquid infrastructure v2.0</p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+    // YOUR CONFIG
+    const firebaseConfig = {
+        apiKey: "AIzaSyB7YULiFTnzyp6rYVNUBgGOleqyxUAWyrc",
+        authDomain: "langdonn-core.firebaseapp.com",
+        projectId: "langdonn-core",
+        storageBucket: "langdonn-core.firebasestorage.app",
+        messagingSenderId: "868628296074",
+        appId: "1:868628296074:web:be020a54a488952962d873",
+        measurementId: "G-LS03K0J70S"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const settingsRef = ref(db, 'settings');
+
+    // Sync current settings to UI
+    onValue(settingsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('lockStatus').innerText = data.lockdown ? "active (site locked)" : "inactive (site live)";
+            document.getElementById('lockStatus').style.color = data.lockdown ? "var(--danger)" : "var(--accent)";
+            document.getElementById('webhookInput').value = data.webhook || "";
+        }
+    });
+
+    // Toggle Lockdown ON
+    document.getElementById('lockOn').onclick = () => {
+        update(settingsRef, { lockdown: true })
+            .then(() => alert('lockdown activated'))
+            .catch((e) => alert('error: ' + e.message));
+    };
+
+    // Toggle Lockdown OFF
+    document.getElementById('lockOff').onclick = () => {
+        update(settingsRef, { lockdown: false })
+            .then(() => alert('lockdown disabled'))
+            .catch((e) => alert('error: ' + e.message));
+    };
+
+    // Save Webhook
+    document.getElementById('saveWebhook').onclick = () => {
+        const newUrl = document.getElementById('webhookInput').value;
+        update(settingsRef, { webhook: newUrl })
+            .then(() => alert('webhook updated successfully'))
+            .catch((e) => alert('error: ' + e.message));
+    };
+</script>
+
+</body>
+</html>
