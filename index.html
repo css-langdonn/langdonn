@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>langdonn | home</title>
+    <title>langdonn | liquid glass</title>
     <style>
         :root {
             --bg: #030303;
@@ -13,181 +13,45 @@
             --fluid-speed: 0.6s;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'inter', sans-serif;
-            text-transform: lowercase;
-            -webkit-tap-highlight-color: transparent;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'inter', sans-serif; text-transform: lowercase; }
+        body { background: var(--bg); color: #fff; overflow: hidden; height: 100dvh; }
+
+        #lockdownScreen { 
+            display: none; position: fixed; inset: 0; background: #000; z-index: 10000; 
+            flex-direction: column; align-items: center; justify-content: center; text-align: center; 
         }
 
-        body {
-            background: var(--bg);
-            color: #fff;
-            overflow: hidden; 
-            height: 100dvh;
-        }
+        #cursor { width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; display: none; }
+        @media (pointer: fine) { #cursor { display: block; } body { cursor: none; } }
 
-        #cursor {
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(5px);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            display: none;
-        }
+        .liquid-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%); }
+        .orb { position: absolute; width: 80vw; height: 80vw; border-radius: 50%; filter: blur(120px); opacity: 0.3; transition: all 1s ease; }
 
-        @media (pointer: fine) {
-            #cursor { display: block; }
-            body { cursor: none; }
-        }
+        .view { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transform: scale(1.1) translateY(20px); transition: all var(--fluid-speed) cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; }
+        .view.active { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
 
-        .liquid-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
-        }
+        nav { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 95%; max-width: 500px; }
+        .nav-glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(30px); border: 1px solid var(--border); padding: 8px; border-radius: 100px; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { padding: 12px 15px; border-radius: 100px; color: rgba(255,255,255,0.5); text-decoration: none; transition: 0.3s; font-size: 0.85rem; cursor: pointer; }
+        .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .orb {
-            position: absolute;
-            width: 80vw;
-            height: 80vw;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.3;
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+        h1 { font-size: clamp(4rem, 15vw, 12rem); font-weight: 900; letter-spacing: -8px; margin-bottom: 20px; background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn { background: #fff; color: #000; padding: 20px 40px; border-radius: 100px; border: none; font-size: 1.1rem; font-weight: 700; transition: 0.4s; width: 100%; max-width: 300px; cursor: pointer; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,255,255,0.3); }
 
-        .view {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.1) translateY(20px);
-            transition: all var(--fluid-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
-        }
+        .demo-btn { background: var(--glass); color: #fff; border: 1px solid var(--border); margin-bottom: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 25px; border-radius: 30px; text-align: left; }
+        input { background: var(--glass); border: 1px solid var(--border); padding: 18px; border-radius: 20px; color: #fff; width: 100%; margin-bottom: 15px; outline: none; }
 
-        .view.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: scale(1) translateY(0);
-        }
-
-        nav {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .nav-glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border);
-            padding: 10px;
-            border-radius: 100px;
-            display: flex;
-            justify-content: space-around;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .nav-item {
-            padding: 12px 20px;
-            border-radius: 100px;
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            transition: 0.3s;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .nav-item.active {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-
-        h1 {
-            font-size: clamp(4rem, 15vw, 12rem);
-            font-weight: 900;
-            letter-spacing: -8px;
-            margin-bottom: 20px;
-            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .btn {
-            background: #fff;
-            color: #000;
-            padding: 20px 40px;
-            border-radius: 100px;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 700;
-            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(255,255,255,0.3);
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        /* mobile grid adjustment */
-        @media (max-width: 600px) {
-            .card-grid { grid-template-columns: 1fr; }
-            h1 { letter-spacing: -4px; }
-        }
-
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            padding: 25px;
-            border-radius: 30px;
-            text-align: left;
-        }
-
-        input {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 18px;
-            border-radius: 20px;
-            color: #fff;
-            width: 100%;
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 16px; /* crucial for ios zoom fix */
-        }
+        #loginModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(40px); z-index: 5000; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
+
+    <div id="lockdownScreen">
+        <h1>locked.</h1>
+        <p style="opacity: 0.5;">liquid maintenance in progress.</p>
+    </div>
 
     <div id="cursor"></div>
 
@@ -196,11 +60,13 @@
         <div class="orb" id="orb2" style="background: #7000ff; bottom: -20%; right: -10%;"></div>
     </div>
 
-    <nav>
+    <nav id="mainNav">
         <div class="nav-glass">
-            <a href="#" class="nav-item active" onclick="showView('home', this)">home</a>
-            <a href="#" class="nav-item" onclick="showView('work', this)">work</a>
-            <a href="#" class="nav-item" onclick="showView('contact', this)">upgrade</a>
+            <a onclick="showView('home', this)" class="nav-item active">home</a>
+            <a onclick="showView('work', this)" class="nav-item">work</a>
+            <a onclick="showView('portfolio', this)" class="nav-item">portfolio</a>
+            <a onclick="showView('contact', this)" class="nav-item">upgrade</a>
+            <div onclick="toggleLogin(true)" style="opacity: 0.1; font-size: 0.6rem; cursor: pointer;">admin</div>
         </div>
     </nav>
 
@@ -211,19 +77,18 @@
     </section>
 
     <section id="work" class="view">
-        <div class="card-grid">
-            <div class="glass-card">
-                <h3>for restraunts:</h3>
-                <p>we translate physical atmosphere into digital presence. your restaurant deserves an interface as refined as its menu.</p>
-            </div>
-            <div class="glass-card">
-                <h3>for others:</h3>
-                <p>boutique retail, local trades, or specialized services. if you have a craft, we give it a premium and professional look.</p>
-            </div>
-            <div class="glass-card" style="grid-column: 1 / -1;">
-                <h3>the results.</h3>
-                <p>our clients see a 400% increase in "how did you do that?" emails.</p>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; max-width: 900px; width: 100%;">
+            <div class="glass-card"><h3>for restaurants:</h3><p>we translate physical atmosphere into digital presence.</p></div>
+            <div class="glass-card"><h3>for others:</h3><p>boutique retail or luxury trades. we define your craft.</p></div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="view">
+        <h2 style="margin-bottom: 30px;">live demos.</h2>
+        <div style="width: 100%; max-width: 300px; display: flex; flex-direction: column;">
+            <a href="/demos/page-1.html" class="btn demo-btn">modern aesthetic</a>
+            <a href="/demos/page-2.html" class="btn demo-btn">minimal retail</a>
+            <a href="/demos/page-3.html" class="btn demo-btn">luxury service</a>
         </div>
     </section>
 
@@ -233,79 +98,95 @@
             <form id="contactForm">
                 <input type="text" id="name" placeholder="your name" required>
                 <input type="email" id="email" placeholder="email address" required>
-                <input type="text" id="url" placeholder="current (boring) url">
+                <input type="text" id="url" placeholder="website (if any)">
                 <button type="submit" class="btn" style="width: 100%;" id="submitBtn">send to langdonn</button>
             </form>
         </div>
     </section>
 
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwWo25dFYDepNbP4OX6_12xFg2fAO1j36dNQYbht1KAXJssCfUaH5cvCS6iIZdhE_yCbA/exec';
-        
-        function showView(viewId, navEl) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(navEl) {
-                navEl.classList.add('active');
-            } else {
-                document.querySelectorAll('.nav-item').forEach(el => {
-                    if(el.innerText === 'upgrade' && viewId === 'contact') el.classList.add('active');
-                    if(el.innerText === viewId) el.classList.add('active');
-                });
+    <div id="loginModal">
+        <div style="width: 90%; max-width: 320px; text-align: center;">
+            <h2 style="margin-bottom: 40px; font-weight: 800; letter-spacing: -3px; font-size: 2rem;">command.</h2>
+            <input type="text" id="adminUser" placeholder="username">
+            <input type="password" id="adminPass" placeholder="password">
+            <button class="btn" style="width: 100%;" id="loginSubmit">enter</button>
+            <p onclick="toggleLogin(false)" style="margin-top: 30px; opacity: 0.3; cursor: pointer; font-size: 0.75rem;">cancel</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7YULiFTnzyp6rYVNUBgGOleqyxUAWyrc",
+            authDomain: "langdonn-core.firebaseapp.com",
+            projectId: "langdonn-core",
+            storageBucket: "langdonn-core.firebasestorage.app",
+            messagingSenderId: "868628296074",
+            appId: "1:868628296074:web:be020a54a488952962d873",
+            measurementId: "G-LS03K0J70S"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        let CURRENT_WEBHOOK = "";
+
+        // LISTEN TO FIREBASE
+        const settingsRef = ref(db, 'settings');
+        onValue(settingsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                if (data.lockdown === true) {
+                    document.getElementById('lockdownScreen').style.display = 'flex';
+                } else {
+                    document.getElementById('lockdownScreen').style.display = 'none';
+                }
+                CURRENT_WEBHOOK = data.webhook;
             }
-
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-
-            const orb1 = document.getElementById('orb1');
-            if(viewId === 'work') {
-                orb1.style.transform = 'translate(30vw, 20vh)';
-            } else if (viewId === 'contact') {
-                orb1.style.background = '#ff007a';
-                orb1.style.transform = 'translate(10vw, 30vh)';
-            } else {
-                orb1.style.background = '#00f2ff';
-                orb1.style.transform = 'translate(0,0)';
-            }
-        }
-
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            const xMove = (e.clientX - window.innerWidth / 2) / 30;
-            const yMove = (e.clientY - window.innerHeight / 2) / 30;
-            document.querySelectorAll('.view.active h1, .glass-card').forEach(el => {
-                el.style.transform = `translate(${xMove}px, ${yMove}px)`;
-            });
         });
 
-        const form = document.getElementById('contactForm');
-        const btn = document.getElementById('submitBtn');
+        // UI LOGIC
+        window.showView = (viewId, navEl) => {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(navEl) navEl.classList.add('active');
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.getElementById('orb1').style.background = (viewId === 'contact') ? '#ff007a' : '#00f2ff';
+        };
 
-        form.addEventListener('submit', e => {
+        window.toggleLogin = (show) => { document.getElementById('loginModal').style.display = show ? 'flex' : 'none'; };
+
+        document.getElementById('loginSubmit').onclick = () => {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            if (u === "admin" && p === "password") window.location.href = "staff.html";
+            else alert('denied');
+        };
+
+        // DISCORD SUBMISSION
+        document.getElementById('contactForm').onsubmit = async (e) => {
             e.preventDefault();
-            btn.innerHTML = 'processing...';
-            btn.disabled = true;
-
-            const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                url: document.getElementById('url').value
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = 'sending...';
+            const payload = { 
+                content: `**customer's name**\n\`\`\`${document.getElementById('name').value}\`\`\`\n**email address**\n\`\`\`${document.getElementById('email').value}\`\`\`\n**website (if any)**\n\`\`\`${document.getElementById('url').value || 'none'}\`\`\`` 
             };
+            try {
+                await fetch(CURRENT_WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                btn.innerHTML = 'sent';
+                setTimeout(() => { showView('home'); btn.innerHTML = 'send to langdonn'; document.getElementById('contactForm').reset(); }, 2000);
+            } catch (err) { alert('check webhook'); btn.innerHTML = 'error'; }
+        };
 
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                btn.innerHTML = 'sent successfully';
-                form.reset();
-                setTimeout(() => {
-                    showView('home');
-                    btn.innerHTML = 'send to langdonn';
-                    btn.disabled = false;
-                }, 2000);
+        // CURSOR
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+            const xMove = (e.clientX - window.innerWidth / 2) / 40;
+            const yMove = (e.clientY - window.innerHeight / 2) / 40;
+            document.querySelectorAll('.view.active h1, .glass-card').forEach(el => {
+                el.style.transform = `translate(${xMove}px, ${yMove}px)`;
             });
         });
     </script>
