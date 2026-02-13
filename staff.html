@@ -2,123 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>langdonn | liquid glass</title>
+    <title>langdonn | global console</title>
     <style>
-        :root {
-            --bg: #030303;
-            --glass: rgba(255, 255, 255, 0.02);
-            --border: rgba(255, 255, 255, 0.1);
-            --accent: #00f2ff;
-            --fluid-speed: 0.6s;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'inter', sans-serif; text-transform: lowercase; }
-        body { background: var(--bg); color: #fff; overflow: hidden; height: 100dvh; }
-
-        /* FIX: Highest Z-Index for Cursor */
-        #cursor { 
-            width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5); 
-            backdrop-filter: blur(5px); border-radius: 50%; position: fixed; 
-            pointer-events: none; z-index: 99999; display: none;
-            transition: transform 0.15s ease-out;
-        }
-
-        #lockdownScreen { 
-            display: none; position: fixed; inset: 0; background: #000; z-index: 10000; 
-            flex-direction: column; align-items: center; justify-content: center; text-align: center; 
-        }
-
-        #particleCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-
-        @media (pointer: fine) { body { cursor: none; } }
-
-        .liquid-bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%); }
-        .orb { position: absolute; width: 80vw; height: 80vw; border-radius: 50%; filter: blur(120px); opacity: 0.3; transition: all 1s ease; }
-
-        .view { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transform: scale(1.1) translateY(20px); transition: all var(--fluid-speed) cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center; }
-        .view.active { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
-
-        nav { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 95%; max-width: 500px; }
-        .nav-glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(30px); border: 1px solid var(--border); padding: 8px; border-radius: 100px; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { padding: 12px 15px; border-radius: 100px; color: rgba(255,255,255,0.5); text-decoration: none; transition: 0.3s; font-size: 0.85rem; cursor: pointer; }
-        .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
-
-        h1 { font-size: clamp(4rem, 15vw, 12rem); font-weight: 900; letter-spacing: -8px; margin-bottom: 20px; background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn { background: #fff; color: #000; padding: 20px 40px; border-radius: 100px; border: none; font-size: 1.1rem; font-weight: 700; transition: 0.4s; width: 100%; max-width: 300px; cursor: pointer; }
-        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 25px; border-radius: 30px; text-align: left; }
-        input { background: var(--glass); border: 1px solid var(--border); padding: 18px; border-radius: 20px; color: #fff; width: 100%; margin-bottom: 15px; outline: none; }
-
-        #loginModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(40px); z-index: 10001; align-items: center; justify-content: center; }
+        :root { --bg: #030303; --accent: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
+        body { background: var(--bg); color: #fff; font-family: 'inter', sans-serif; padding: 40px; text-transform: lowercase; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; }
+        .panel { background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        input, select { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: #fff; margin-top: 10px; border-radius: 10px; outline: none; }
+        .label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; margin-bottom: 10px; }
+        #status { font-weight: 900; color: var(--accent); }
     </style>
 </head>
 <body>
-
-    <div id="cursor"></div>
-    <div id="lockdownScreen"><h1>locked.</h1><p style="opacity: 0.5;">liquid maintenance in progress.</p></div>
-    <canvas id="particleCanvas"></canvas>
-
-    <div class="liquid-bg">
-        <div class="orb" id="orb1" style="background: #00f2ff; top: -20%; left: -10%;"></div>
-        <div class="orb" id="orb2" style="background: #7000ff; bottom: -20%; right: -10%;"></div>
-    </div>
-
-    <nav id="mainNav">
-        <div class="nav-glass">
-            <a onclick="showView('home', this)" class="nav-item active">home</a>
-            <a onclick="showView('work', this)" class="nav-item">work</a>
-            <a onclick="showView('portfolio', this)" class="nav-item">portfolio</a>
-            <a onclick="showView('contact', this)" class="nav-item">upgrade</a>
-            <div onclick="toggleLogin(true)" style="opacity: 0.1; font-size: 0.6rem; cursor: pointer;">admin</div>
+    <div class="container">
+        <h1 style="font-size: 3rem; letter-spacing: -3px; margin-bottom: 30px;">command.</h1>
+        
+        <div class="panel">
+            <div class="label">system security</div>
+            <p>status: <span id="status">syncing...</span></p>
+            <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">activate lockdown</button>
+            <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">disable lockdown</button>
         </div>
-    </nav>
 
-    <section id="home" class="view active">
-        <h1>langdonn</h1>
-        <p style="margin-bottom: 40px; opacity: 0.6;">if they can’t find you on a screen, you don’t exist.</p>
-        <button class="btn" onclick="showView('contact')">start the transformation</button>
-    </section>
-
-    <section id="work" class="view">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; max-width: 900px; width: 100%;">
-            <div class="glass-card"><h3>for restaurants:</h3><p>we translate physical atmosphere into digital presence.</p></div>
-            <div class="glass-card"><h3>for others:</h3><p>boutique retail or luxury trades. we define your craft.</p></div>
+        <div class="panel">
+            <div class="label">atmosphere toggle</div>
+            <select id="themeSelect">
+                <option value="none">liquid only</option>
+                <option value="snow">winter (snow)</option>
+                <option value="leaves">autumn (leaves)</option>
+            </select>
+            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy theme</button>
         </div>
-    </section>
 
-    <section id="portfolio" class="view">
-        <h2 style="margin-bottom: 30px;">live demos.</h2>
-        <div style="width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 10px;">
-            <a href="#" class="btn glass-card" style="text-align:center; padding: 20px;">modern aesthetic</a>
-            <a href="#" class="btn glass-card" style="text-align:center; padding: 20px;">minimal retail</a>
-        </div>
-    </section>
-
-    <section id="contact" class="view">
-        <div class="glass-card" style="width: 100%; max-width: 450px;">
-            <h2 style="margin-bottom: 20px;">get your website.</h2>
-            <form id="contactForm">
-                <input type="text" id="name" placeholder="your name" required>
-                <input type="email" id="email" placeholder="email address" required>
-                <input type="text" id="url" placeholder="website (if any)">
-                <button type="submit" class="btn" style="width: 100%;" id="submitBtn">send to langdonn</button>
-            </form>
-        </div>
-    </section>
-
-    <div id="loginModal">
-        <div style="width: 90%; max-width: 320px; text-align: center;">
-            <h2 style="margin-bottom: 40px; font-weight: 800; letter-spacing: -3px; font-size: 2rem;">command.</h2>
-            <input type="text" id="adminUser" placeholder="username">
-            <input type="password" id="adminPass" placeholder="password">
-            <button class="btn" style="width: 100%;" id="loginSubmit">enter</button>
-            <p onclick="toggleLogin(false)" style="margin-top: 30px; opacity: 0.3; cursor: pointer; font-size: 0.75rem;">cancel</p>
+        <div class="panel">
+            <div class="label">integrations</div>
+            <input type="text" id="webhookInput" placeholder="discord webhook url">
+            <button class="btn" style="background: #fff;" onclick="setWebhook()">update webhook</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+        import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB7YULiFTnzyp6rYVNUBgGOleqyxUAWyrc",
@@ -134,94 +60,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const settingsRef = ref(db, 'settings');
-        let CURRENT_WEBHOOK = "";
 
-        // CURSOR LOGIC
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.display = 'block';
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            const xMove = (e.clientX - window.innerWidth / 2) / 45;
-            const yMove = (e.clientY - window.innerHeight / 2) / 45;
-            document.querySelectorAll('.view.active h1, .glass-card').forEach(el => {
-                el.style.transform = `translate(${xMove}px, ${yMove}px)`;
-            });
-        });
-
-        // PARTICLE SYSTEM
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let animationId;
-
-        function initParticles(type) {
-            cancelAnimationFrame(animationId);
-            particles = [];
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            if (type === "none") return;
-            for (let i = 0; i < 80; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    speed: Math.random() * 2 + 0.5,
-                    size: type === 'snow' ? Math.random() * 3 + 1 : Math.random() * 6 + 2,
-                    opacity: Math.random() * 0.4 + 0.2,
-                    velX: Math.random() * 1 - 0.5
-                });
-            }
-            animate(type);
-        }
-
-        function animate(type) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = type === 'snow' ? '#FFF' : '#d4a373';
-            particles.forEach(p => {
-                ctx.globalAlpha = p.opacity;
-                ctx.beginPath();
-                if (type === 'snow') ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                else ctx.rect(p.x, p.y, p.size, p.size / 2);
-                ctx.fill();
-                p.y += p.speed; p.x += p.velX;
-                if (p.y > canvas.height) p.y = -10;
-            });
-            animationId = requestAnimationFrame(() => animate(type));
-        }
-
-        // FIREBASE SYNC
-        onValue(settingsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('lockdownScreen').style.display = data.lockdown ? 'flex' : 'none';
-                CURRENT_WEBHOOK = data.webhook;
-                initParticles(data.theme || "none");
+        onValue(settingsRef, (s) => {
+            const d = s.val();
+            if(d) {
+                document.getElementById('status').innerText = d.lockdown ? "LOCKED" : "LIVE";
+                document.getElementById('status').style.color = d.lockdown ? "#ff4d4d" : "#00f2ff";
+                document.getElementById('webhookInput').value = d.webhook || "";
+                document.getElementById('themeSelect').value = d.theme || "none";
             }
         });
 
-        // UI HELPERS
-        window.showView = (v, el) => {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById(v).classList.add('active');
-        };
-        window.toggleLogin = (s) => document.getElementById('loginModal').style.display = s ? 'flex' : 'none';
-        
-        document.getElementById('loginSubmit').onclick = () => {
-            if(document.getElementById('adminUser').value === "admin" && document.getElementById('adminPass').value === "password") window.location.href="staff.html";
-            else alert('denied');
-        };
-
-        document.getElementById('contactForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerHTML = 'sending...';
-            const payload = { content: `**new lead**\nName: ${document.getElementById('name').value}\nEmail: ${document.getElementById('email').value}\nSite: ${document.getElementById('url').value || 'N/A'}` };
-            await fetch(CURRENT_WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-            btn.innerHTML = 'sent';
-            setTimeout(() => { showView('home'); btn.innerHTML = 'send to langdonn'; }, 2000);
-        };
+        window.setLock = (v) => update(settingsRef, { lockdown: v });
+        window.setTheme = () => update(settingsRef, { theme: document.getElementById('themeSelect').value });
+        window.setWebhook = () => update(settingsRef, { webhook: document.getElementById('webhookInput').value });
     </script>
 </body>
 </html>
