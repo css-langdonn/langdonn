@@ -2,24 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>langdonn | command</title>
     <style>
         :root { --bg: #030303; --accent: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
         body { background: var(--bg); color: #fff; font-family: 'inter', sans-serif; padding: 40px; text-transform: lowercase; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 600px; }
         .panel { background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; transition: all 0.2s ease; }
+        .btn:active { transform: scale(0.98); }
         input, select, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: #fff; margin-top: 10px; border-radius: 10px; outline: none; font-family: inherit; }
-        textarea { height: 120px; resize: none; font-size: 0.9rem; }
+        textarea { height: 100px; resize: none; }
         .label { font-size: 0.7rem; opacity: 0.4; letter-spacing: 1px; margin-bottom: 5px; margin-top: 15px; font-weight: 700; }
-        #status { font-weight: 900; color: var(--accent); }
-        
-        /* Toolbar for Webhook */
-        .toolbar { display: flex; gap: 8px; margin-top: 10px; }
-        .tool-btn { background: #111; border: 1px solid #333; color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; }
-        .tool-btn:hover { background: #222; }
+        #status { font-weight: 900; }
     </style>
 </head>
 <body>
@@ -30,8 +24,8 @@
             <div class="label">global state</div>
             <p>status: <span id="status">syncing...</span></p>
             <div style="display: flex; gap: 10px;">
-                <button class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">lock site</button>
-                <button class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">unlock site</button>
+                <button id="lockBtn" class="btn" style="background: #ff4d4d; color: #fff;" onclick="setLock(true)">lock site</button>
+                <button id="unlockBtn" class="btn" style="background: #222; color: #fff;" onclick="setLock(false)">unlock site</button>
             </div>
             
             <div class="label">theme engine</div>
@@ -41,47 +35,30 @@
                 <option value="leaves">autumn leaves</option>
                 <option value="matrix">matrix rain</option>
             </select>
-            <button class="btn" style="background: #fff;" onclick="setTheme()">deploy theme</button>
+            <button id="themeBtn" class="btn" style="background: #fff;" onclick="setTheme()">deploy theme</button>
         </div>
 
         <div class="panel">
             <div class="label">discord broadcaster</div>
-            <p style="font-size: 0.75rem; opacity: 0.5;">send rich-text messages to your connected channel.</p>
-            
-            <div class="toolbar">
-                <button class="tool-btn" onclick="wrapText('**')"><b>B</b></button>
-                <button class="tool-btn" onclick="wrapText('*')"><i>I</i></button>
-                <button class="tool-btn" onclick="wrapText('```')">code</button>
-                <button class="tool-btn" onclick="wrapText('> ')">quote</button>
-            </div>
-            
-            <textarea id="msgContent" placeholder="type your message here..."></textarea>
-            
-            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                <input type="checkbox" id="isAlert" style="width: 20px; margin: 0;">
-                <span style="font-size: 0.8rem; opacity: 0.7;">send as system alert (formatting)</span>
-            </div>
-            
-            <button class="btn" style="background: var(--accent); color: #000;" onclick="sendBroadcast()">send broadcast</button>
+            <textarea id="msgContent" placeholder="type broadcast message..."></textarea>
+            <button id="broadcastBtn" class="btn" style="background: var(--accent); color: #000;" onclick="sendBroadcast()">send to discord</button>
         </div>
 
         <div class="panel">
-            <div class="label">endpoint configuration</div>
-            <input type="text" id="webhookInput" placeholder="discord webhook url">
-            <button class="btn" style="background: #fff; font-size: 0.8rem; padding: 10px;" onclick="setWebhook()">save webhook</button>
+            <div class="label">webhook url</div>
+            <input type="text" id="webhookInput" placeholder="https://discord.com/api/webhooks/...">
+            <button id="hookBtn" class="btn" style="background: #fff; font-size: 0.8rem;" onclick="setWebhook()">save configuration</button>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "[https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js](https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js)";
-        import { getDatabase, ref, update, onValue } from "[https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js](https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js)";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB7YULiFTnzyp6rYVNUBgGOleqyxUAWyrc",
-            authDomain: "langdonn-core.firebaseapp.com",
-            databaseURL: "[https://langdonn-core-default-rtdb.firebaseio.com](https://langdonn-core-default-rtdb.firebaseio.com)",
-            projectId: "langdonn-core",
-            appId: "1:868628296074:web:be020a54a488952962d873"
+            databaseURL: "https://langdonn-core-default-rtdb.firebaseio.com", 
+            projectId: "langdonn-core"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -89,59 +66,62 @@
         const settingsRef = ref(db, 'settings');
         let currentHook = "";
 
+        // Helper for button feedback
+        const feedback = (btnId, originalText) => {
+            const btn = document.getElementById(btnId);
+            btn.innerText = "updated.";
+            setTimeout(() => { btn.innerText = originalText; }, 1500);
+        };
+
         onValue(settingsRef, (s) => {
             const d = s.val();
             if(d) {
-                document.getElementById('status').innerText = d.lockdown ? "LOCKED" : "LIVE";
-                document.getElementById('status').style.color = d.lockdown ? "#ff4d4d" : "#00f2ff";
+                const statusSpan = document.getElementById('status');
+                statusSpan.innerText = d.lockdown ? "LOCKED" : "LIVE";
+                statusSpan.style.color = d.lockdown ? "#ff4d4d" : "#00f2ff";
                 document.getElementById('webhookInput').value = d.webhook || "";
                 currentHook = d.webhook || "";
                 document.getElementById('themeSelect').value = d.theme || "none";
             }
         });
 
-        // SYSTEM ACTIONS
-        window.setLock = (v) => update(settingsRef, { lockdown: v });
-        window.setTheme = () => update(settingsRef, { theme: document.getElementById('themeSelect').value });
-        window.setWebhook = () => update(settingsRef, { webhook: document.getElementById('webhookInput').value });
+        window.setLock = (v) => {
+            update(settingsRef, { lockdown: v });
+            feedback(v ? 'lockBtn' : 'unlockBtn', v ? 'lock site' : 'unlock site');
+        };
 
-        // BROADCASTER ACTIONS
-        window.wrapText = (symbol) => {
-            const area = document.getElementById('msgContent');
-            const start = area.selectionStart;
-            const end = area.selectionEnd;
-            const text = area.value;
-            const selected = text.substring(start, end);
-            area.value = text.substring(0, start) + symbol + selected + symbol + text.substring(end);
-            area.focus();
+        window.setTheme = () => {
+            update(settingsRef, { theme: document.getElementById('themeSelect').value });
+            feedback('themeBtn', 'deploy theme');
+        };
+
+        window.setWebhook = () => {
+            update(settingsRef, { webhook: document.getElementById('webhookInput').value });
+            feedback('hookBtn', 'save configuration');
         };
 
         window.sendBroadcast = async () => {
-            if(!currentHook) return alert("no webhook configured");
             const content = document.getElementById('msgContent').value;
-            const isAlert = document.getElementById('isAlert').checked;
+            const btn = document.getElementById('broadcastBtn');
+            if(!currentHook || !content) return;
             
-            let finalMsg = content;
-            if(isAlert) {
-                finalMsg = "```diff\n+ SYSTEM BROADCAST\n```\n" + content;
-            }
-
-            const payload = {
-                username: "langdonn terminal",
-                avatar_url: "[https://i.imgur.com/4E4X6qS.png](https://i.imgur.com/4E4X6qS.png)",
-                content: finalMsg
-            };
-
+            btn.innerText = "sending...";
             try {
                 await fetch(currentHook, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ 
+                        username: "langdonn terminal", 
+                        avatar_url: "",
+                        content: content 
+                    })
                 });
                 document.getElementById('msgContent').value = "";
-                alert("broadcast sent");
+                btn.innerText = "transmitted.";
+                setTimeout(() => { btn.innerText = "send to discord"; }, 1500);
             } catch (e) {
-                alert("broadcast failed: " + e);
+                btn.innerText = "failed.";
+                setTimeout(() => { btn.innerText = "send to discord"; }, 1500);
             }
         };
     </script>
