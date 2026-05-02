@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>504 Gateway Timeout</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: "Times New Roman", Times, serif;
+            margin: 50px;
+            text-align: center;
+        }
+        
+        .error-box {
+            border: 1px solid #cccccc;
+            padding: 20px;
+            display: inline-block;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        hr {
+            width: 80%;
+            border: 0;
+            border-top: 1px solid #999;
+        }
+
+        .server-info {
+            font-style: italic;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #0000ee;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-box">
+        <h1>504 Gateway Timeout</h1>
+        <p>The server did not receive a timely response from the upstream server.</p>
+        <hr>
+        <p>
+            The page you are looking for is temporarily unavailable. 
+            Please <a href="javascript:history.back()">go back</a> and try again in a few minutes.
+        </p>
+        
+        <div class="server-info">
+            Apache/2.2.11 (Unix) mod_ssl/2.2.11 OpenSSL/0.9.8k Server at localhost Port 80
+        </div>
+    </div>
+
+    <p><small>If you continue to see this error, please contact the site administrator.</small></p>
+
+</body>
+</html>
