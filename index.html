@@ -1,161 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Personal Blog - 2009</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap');
-        
+        /* Classic 2000s Web Aesthetics */
         body {
-            background: #000;
-            color: #fff;
-            font-family: 'Syncopate', sans-serif;
-            overflow: hidden;
-            perspective: 1200px;
-            touch-action: none; /* Prevents accidental zooming/scrolling */
+            background-color: #e1e1e1;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .header-table {
+            background-color: #ffffff;
+            border: 1px solid #999;
+            width: 850px;
+            margin-bottom: 10px;
         }
 
-        /* Fluid Typography: Scales perfectly from iPhone to Desktop */
-        .nav-item {
-            text-transform: uppercase;
+        .main-table {
+            background-color: #ffffff;
+            border: 1px solid #999;
+            width: 850px;
+        }
+
+        .sidebar {
+            width: 200px;
+            vertical-align: top;
+            border-right: 1px dashed #ccc;
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        .content {
+            vertical-align: top;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .post-title {
+            color: #cc0000;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .login-link {
+            float: right;
+            font-size: 11px;
+            color: #666;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+            color: #000;
+        }
+
+        a { color: #0000ee; }
+        
+        /* Making things look a bit "unmaintained" */
+        .dead-link {
+            color: #0000ee;
+            text-decoration: underline;
             cursor: pointer;
-            font-size: 14vw; 
-            line-height: 0.9;
-            white-space: nowrap;
-            transition: opacity 0.4s ease;
-        }
-
-        @media (min-width: 768px) {
-            .nav-item { font-size: 10rem; }
-        }
-
-        .nav-item:active, .nav-item:hover {
-            opacity: 1 !important;
-            letter-spacing: 0.05em;
-        }
-
-        .bg-noise {
-            position: fixed;
-            inset: -50%;
-            width: 200%;
-            height: 200%;
-            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.12;
-            animation: grain 0.6s steps(2) infinite;
-            pointer-events: none;
-        }
-
-        @keyframes grain {
-            0% { transform:translate(0, 0) }
-            50% { transform:translate(-5%, 5%) }
-            100% { transform:translate(5%, -5%) }
-        }
-
-        #overlay {
-            will-change: transform;
         }
     </style>
 </head>
-<body class="bg-black">
+<body>
 
-    <div class="bg-noise"></div>
+    <center>
+        <!-- Top Header -->
+        <table class="header-table" cellpadding="10" cellspacing="0">
+            <tr>
+                <td>
+                    <!-- The only working link -->
+                    <a href="/login.html" class="login-link">Member Sign Up</a>
+                    <h1>Life & Thoughts</h1>
+                    <small>Just documenting things as they happen. Don't mind the mess.</small>
+                </td>
+            </tr>
+        </table>
 
-    <main id="scene" class="relative h-screen flex flex-col justify-center items-center gap-6 md:gap-12 text-center px-4">
+        <!-- Main Body -->
+        <table class="main-table" cellpadding="0" cellspacing="0">
+            <tr>
+                <!-- Left Sidebar -->
+                <td class="sidebar">
+                    <strong>About Me</strong><br>
+                    Just a student/coder sharing my journey.<br><br>
+                    
+                    <strong>Links</strong>
+                    <ul>
+                        <li><a href="/504.html">Home</a></li>
+                        <li><a href="/504.html">Archives</a></li>
+                        <li><a href="/504.html">My Projects</a></li>
+                        <li><a href="/504.html">Contact</a></li>
+                    </ul>
+
+                    <strong>Blogroll</strong>
+                    <ul>
+                        <li><a href="/504.html">Gaming News</a></li>
+                        <li><a href="/504.html">Tech Tips</a></li>
+                    </ul>
+                </td>
+
+                <!-- Main Content -->
+                <td class="content">
+                    <div class="post-title">Site Maintenance</div>
+                    <small>Posted on April 28, 2009</small>
+                    <p>
+                        Still having some server issues with the host. Most of the navigation links 
+                        are currently down with Gateway Timeouts (504 errors). I'm trying to move 
+                        everything to a new server soon.
+                    </p>
+                    <p>
+                        The member registration system is still up if you need to get in, but 
+                        everything else is pretty much broken right now.
+                    </p>
+                    <br>
+                    <div class="post-title">Vocal Mix Tests</div>
+                    <small>Posted on April 20, 2009</small>
+                    <p>
+                        Finally got the hardware set up properly. It's amazing how much a decent 
+                        interface makes a difference. I'm working on a new track that blends 
+                        some rap vocals with a more math-rock inspired backing. 
+                    </p>
+                </td>
+            </tr>
+        </table>
         
-        <div onclick="burst('concerts')" class="nav-item opacity-20 tracking-tighter">
-            <span>[</span>concerts<span>]</span>
-        </div>
+        <p><small>&copy; 2009 My Blog. Powered by basic HTML.</small></p>
+    </center>
 
-        <div onclick="burst('music')" class="nav-item opacity-20 tracking-tighter">
-            <span>[</span>music<span>]</span>
-        </div>
-
-        <div onclick="burst('socials')" class="nav-item opacity-20 tracking-tighter">
-            <span>[</span>socials<span>]</span>
-        </div>
-
-    </main>
-
-    <div id="overlay" class="fixed inset-0 bg-[#f0f0f0] text-black z-[100] flex flex-col items-center justify-center translate-y-full">
-        <div id="burst-content" class="w-full text-center px-4">
-            </div>
-
-        <button onclick="closeBurst()" class="absolute bottom-16 text-xs tracking-[0.5em] font-bold border-b-2 border-black pb-1 active:opacity-30 uppercase">
-            EXIT.ESC
-        </button>
-    </div>
-
-    <script>
-        const data = {
-            concerts: `
-                <div class="flex flex-col items-center">
-                    <span class="text-[10px] tracking-[0.8em] mb-4 opacity-40">No Concerts Found</span>
-                    <h2 class="text-4xl md:text-[8rem] italic leading-none">N/A</h2>
-                </div>`,
-            music: `
-                <div class="flex flex-col items-center gap-6">
-                    <span class="text-[10px] tracking-[0.8em] opacity-40">Most Popular</span>
-                    <div class="flex flex-col text-2xl md:text-6xl italic leading-tight uppercase">
-                        <span class="opacity-80">SICK&TWISTED</span>
-                        <span class="opacity-80">NUMB.BRAIN</span>
-                    </div>
-                </div>`,
-            socials: `
-                <div class="flex flex-col items-center">
-                    <span class="text-[10px] tracking-[0.8em] mb-4 opacity-40">@ihatelangdonn on tiktok</span>
-                    <a href="https://instagram.com/langdonnlangdonn" target="_blank" class="text-5xl md:text-[10rem] italic underline decoration-4 md:decoration-8">INSTA</a>
-                </div>`
-        };
-
-        function burst(type) {
-            const overlay = document.getElementById('overlay');
-            const content = document.getElementById('burst-content');
-            content.innerHTML = data[type];
-
-            gsap.to(overlay, {
-                y: 0,
-                duration: 0.7,
-                ease: "expo.inOut"
-            });
-        }
-
-        function closeBurst() {
-            gsap.to("#overlay", {
-                y: "100%",
-                duration: 0.5,
-                ease: "expo.in"
-            });
-        }
-
-        // Tilt logic - Handles both Mouse and Device Orientation (for mobile)
-        function handleMove(xPos, yPos) {
-            const x = (xPos / window.innerWidth - 0.5) * 25;
-            const y = (yPos / window.innerHeight - 0.5) * -25;
-            gsap.to("#scene", { 
-                rotationY: x, 
-                rotationX: y, 
-                duration: 1.2,
-                ease: "power2.out"
-            });
-        }
-
-        window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-        
-        window.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            handleMove(touch.clientX, touch.clientY);
-        });
-
-        // Entrance
-        gsap.from(".nav-item", {
-            y: 50,
-            opacity: 0,
-            duration: 1.2,
-            stagger: 0.1,
-            ease: "expo.out"
-        });
-    </script>
 </body>
 </html>
