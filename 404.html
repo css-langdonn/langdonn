@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LANGDONN</title>
+    <title>404 // LANGDONN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&display=swap');
@@ -26,6 +26,7 @@
             font-weight: 900;
             margin-bottom: 40px;
             user-select: none;
+            opacity: 0.2; /* Dims the logo for the error page */
         }
 
         .status {
@@ -34,11 +35,19 @@
             letter-spacing: 0.2em;
             font-weight: 800;
         }
+
+        .home-link {
+            margin-top: 20px;
+            font-size: 11px;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            opacity: 0.5;
+        }
+        .home-link:hover { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <!-- THE ASCII -->
     <pre class="ascii-hero">
 ██╗      █████╗ ███╗   ██╗ ██████╗ ██████╗  ██████╗ ███╗   ██╗███╗   ██╗
 ██║     ██╔══██╗████╗  ██║██╔════╝ ██╔══██╗██╔═══██╗████╗  ██║████╗  ██║
@@ -47,10 +56,11 @@
 ███████╗██║  ██║██║ ╚████║╚██████╔╝██████╔╝╚██████╔╝██║ ╚████║██║ ╚████║
 ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝</pre>
 
-    <!-- THE STATUS -->
     <div class="status">
-        Under Construction
+        Error 404 // Page Not Found
     </div>
+
+    <a href="/" class="home-link">Return to Root</a>
 
 </body>
 </html>
