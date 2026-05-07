@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LANGDONN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&display=swap');
 
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 60px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ascii-hero {
+            white-space: pre;
+            line-height: 1;
+            font-size: clamp(0.3rem, 0.7vw, 1rem);
+            font-weight: 900;
+            margin-bottom: 40px;
+            user-select: none;
+        }
+
+        .status {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- THE ASCII -->
+    <pre class="ascii-hero">
+██╗      █████╗ ███╗   ██╗ ██████╗ ██████╗  ██████╗ ███╗   ██╗███╗   ██╗
+██║     ██╔══██╗████╗  ██║██╔════╝ ██╔══██╗██╔═══██╗████╗  ██║████╗  ██║
+██║     ███████║██╔██╗ ██║██║  ███╗██║  ██║██║   ██║██╔██╗ ██║██╔██╗ ██║
+██║     ██╔══██║██║╚██╗██║██║   ██║██║  ██║██║   ██║██║╚██╗██║██║╚██╗██║
+███████╗██║  ██║██║ ╚████║╚██████╔╝██████╔╝╚██████╔╝██║ ╚████║██║ ╚████║
+╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝</pre>
+
+    <!-- THE STATUS -->
+    <div class="status">
+        Under Construction
+    </div>
+
+</body>
+</html>
