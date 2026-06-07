@@ -9,12 +9,23 @@
 
   body {
     background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
     font-family: monospace;
+    font-size: 14px;
+    color: #000;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 60px 24px;
   }
+
+  .section-label {
+    font-size: 11px;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .links { margin-bottom: 48px; }
 
   .item {
     display: flex;
@@ -25,35 +36,62 @@
 
   .item:last-child { margin-bottom: 0; }
 
-  a {
-    font-size: 14px;
-    color: #000;
-    text-decoration: none;
-  }
-
+  a { color: #000; text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  .bio {
-    font-size: 11px;
-    color: #bbb;
+  .bio { font-size: 11px; color: #bbb; }
+
+  hr { border: none; border-top: 1px solid #eee; margin-bottom: 48px; }
+
+  .post { margin-bottom: 40px; }
+  .post:last-child { margin-bottom: 0; }
+
+  .post-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
   }
+
+  .post-name { font-weight: bold; }
+  .post-date { font-size: 11px; color: #bbb; }
+  .post-body { line-height: 1.6; color: #333; }
 </style>
 </head>
 <body>
 
-<div>
+  <!-- ── links ── -->
+  <div class="links">
+    <div class="section-label">links</div>
 
-  <div class="item">
-    <a href="https://ig.me/j/AbZa6taXlyQBJ7tn/" target="_blank">instagram group</a>
-    <span class="bio">the group</span>
+    <div class="item">
+      <a href="https://www.instagram.com/j/AbZa6taXlyQBJ7tn/" target="_blank">instagram group</a>
+      <span class="bio">the group</span>
+    </div>
+
+    <div class="item">
+      <a href="https://untitled.stream/library/project/a7aJLxpempnAchQzUIMgT" target="_blank">HalfLife</a>
+      <span class="bio">the album — password protected, pw: HalfChat</span>
+    </div>
+
   </div>
 
-  <div class="item">
-    <a href="https://untitled.stream/invite/bpS41KUW3qrHgjYK583tQ" target="_blank">HalfLife</a>
-  <span class="bio">🔒 = "HalfChat"</span>
-  </div>
+  <hr>
 
-</div>
+  <!-- ── posts ── -->
+  <!-- to post: copy the .post block below, paste it above this comment, fill it in -->
+  <div class="section-label">posts</div>
+  <br>
+
+  <div class="post">
+    <div class="post-header">
+      <span class="post-name">langdonn</span>
+      <span class="post-date">jun 6, 2025</span>
+    </div>
+    <div class="post-body">
+      check out "HalfLife" before anyone else! (remember it's not finished at all so don't expect some songs to drop on the final version!) enjoy - signed langdonn
+    </div>
+  </div>
 
 </body>
 </html>
